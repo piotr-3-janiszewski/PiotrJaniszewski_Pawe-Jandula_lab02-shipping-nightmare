@@ -1,0 +1,210 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{polski}
+\usepackage{lmodern}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{gray},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray}
+}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{}
+
+\title{Strategy (Strategia)}
+\subtitle{czyli jak pozbyć się koszmarnych if-ów raz na zawsze}
+\author{Wzorce projektowe -- laboratorium}
+\date{7 listopada 2025}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Wyobraź sobie...}
+\begin{center}
+\Large
+Jesteś programistą gry RPG i piszesz system walki.
+\end{center}
+
+\pause
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item Wojownik: "Walnę go mieczem!"
+    \pause
+    \item Mag: "Rzucę kulę ognia!"
+    \pause
+    \item Łucznik: "Strzelę z łuku!"
+    \pause
+    \item Mnich: "Uderzę pięścią!"
+    \pause
+    \item Nekromanta: "Przyzwę zombie!"
+    \pause
+    \item Bard: "Zagram na lutni aż ucieknie!"
+\end{itemize}
+
+\vspace{0.5cm}
+\pause
+
+\begin{center}
+\textbf{I co teraz?} 50 klas postaci = 50 if-ów w metodzie attack()?
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Bez Strategy -- kod typu "spaghetti z if-ami"}
+\begin{lstlisting}
+class Character:
+    def __init__(self, character_type, name):
+        self.type = character_type
+        self.name = name
+        
+    def attack(self, enemy):
+        if self.type == "warrior":
+            damage = random.randint(15, 25)
+            print(f"{self.name} uderza mieczem za {damage} dmg!")
+        elif self.type == "mage":
+            damage = random.randint(20, 35)
+            print(f"{self.name} rzuca kule ognia za {damage} dmg!")
+        elif self.type == "archer":
+            damage = random.randint(10, 30)
+            print(f"{self.name} strzela z luku za {damage} dmg!")
+        elif self.type == "monk":
+            damage = random.randint(12, 18)
+            print(f"{self.name} bije piesciami za {damage} dmg!")
+        # ... i tak dalej dla 50 klas postaci
+\end{lstlisting}
+%        else:
+%            damage = 1
+%            print(f"{self.name} macha rekami za {damage} dmg!")
+%        enemy.take_damage(damage)
+\end{frame}
+
+
+
+\begin{frame}{Problem}
+\begin{itemize}
+    \item Metoda attack() \textbf{puchnie} z każdą nową klasą postaci
+    \item \textbf{Jedna metoda robi wszystko} -- oblicza obrażenia dla WSZYSTKICH klas
+    \item Nowa postać = \textbf{musisz grzebać w starym kodzie} (kolejny if)
+    \item Kod jest \textbf{nieczytelny} i \textbf{nietestowalny}
+    \item Chcesz zmienić mechanikę maga? \textbf{Szukaj w gąszczu if-ów}
+    \item Błąd w jednym if-ie może \textbf{zepsuć całą grę}
+\end{itemize}
+
+\vspace{1cm}
+
+\begin{center}
+\Large
+\textbf{Rozwiązanie:} Strategy Pattern
+\end{center}
+\end{frame}
+
+\begin{frame}{Wzorzec Strategy (Wikipedia)}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{strategy_pattern.png}
+\end{center}
+
+\vspace{0.5cm}
+
+\textbf{Idea:} Wydziel rodzinę algorytmów (sposobów ataku) do osobnych klas. 
+
+Pozwól je wymieniać w locie!
+
+\vspace{0.5cm}
+
+Zamiast if-ów -- polimorfizm i kompozycja.
+\end{frame}
+
+\begin{frame}[fragile]{Z Strategy -- elegancki kod}
+\begin{lstlisting}
+class AttackStrategy(ABC): # Strategia ataku
+    @abstractmethod
+    def attack(self, attacker_name, enemy):
+        pass
+class SwordAttack(AttackStrategy): # Konkretne strategie
+    def attack(self, attacker_name, enemy):
+        damage = random.randint(15, 25)
+        print(f"{attacker_name} uderza mieczem za {damage} dmg!")
+        enemy.take_damage(damage)
+class Character: # Postac uzywa strategii
+    def __init__(self, name, attack_strategy: AttackStrategy):
+        self.name = name
+        self.attack_strategy = attack_strategy    
+    def attack(self, enemy):
+        self.attack_strategy.attack(self.name, enemy)
+# Uzycie
+warrior = Character("Conan", SwordAttack())
+mage = Character("Gandalf", FireballAttack())
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Bonus: Można zmieniać strategię w runtime!}
+\begin{lstlisting}
+# Druid moze zmieniac forme!
+druid = Character("Malfurion", BearClawAttack())
+druid.attack(goblin)  # Atakuje pazurami
+
+# Zmiana formy na ptaka
+druid.attack\_strategy = TalonAttack()  
+druid.attack(goblin)  # Atakuje szponami
+
+# Powrot do formy czlowieka
+druid.attack\_strategy = StaffAttack()
+druid.attack(goblin)  # Atakuje laska
+\end{lstlisting}
+
+\vspace{0.5cm}
+
+\textbf{To jest moc Strategy!} Zachowanie zmienia się dynamicznie bez modyfikacji klasy Character.
+\end{frame}
+
+\begin{frame}{Kiedy używać Strategy?}
+\begin{itemize}
+    \item Masz \textbf{wiele wariantów} tego samego algorytmu
+    \item Używasz \textbf{długich if/elif/else} lub \textbf{switch/case}
+    \item Algorytmy mają \textbf{podobny interfejs} (np. wszystkie atakują)
+    \item Chcesz móc \textbf{zmieniać zachowanie} w runtime
+    \item Chcesz \textbf{łatwo dodawać} nowe warianty
+\end{itemize}
+
+\vspace{1cm}
+
+\textbf{Trade-off:} Więcej klas, ale każda robi jedną rzecz dobrze (Single Responsibility Principle).
+\end{frame}
+
+\begin{frame}{Dzisiaj na zajęciach}
+\begin{enumerate}
+    \item Dostaniecie kod systemu dostawy w sklepie internetowym: \\
+    \texttt{https://github.com/refactor-or-die/lab02-shipping-nightmare}
+    \item W parach zrefaktoryzujecie go używając wzorca Strategy
+    \item Zastąpicie koszmar if-ów eleganckimi strategiami
+    \item Zaprezentujecie swoje rozwiązanie
+\end{enumerate}
+
+\vspace{1cm}
+
+\begin{center}
+\Large
+\textbf{Pytania?} \\
+\vspace{0.5cm}
+\normalsize
+Jeśli nie -- to \texttt{git clone} i wyciągamy miecze... znaczy klawiatury!
+\end{center}
+\end{frame}
+
+\end{document}
