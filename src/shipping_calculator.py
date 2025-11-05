@@ -92,18 +92,19 @@ class ShippingCalculator:
         elif shipping_type == "express":
             base_cost = self.base_rates["express"]
             
-            # Express ma inne progi wagowe
-            if package.weight > 3:
-                base_cost += (package.weight - 3) * 4
-            elif package.weight > 8:
-                base_cost += (package.weight - 8) * 6
-            elif package.weight > 15:
-                # Express nie przyjmuje powyżej 15kg
+            # Express nie przyjmuje powyżej 15kg
+            if package.weight > 15:
                 return {
                     "cost": None,
                     "delivery_date": None,
                     "info": "Express nie obsługuje paczek powyżej 15kg"
                 }
+            
+            # Express ma inne progi wagowe
+            if package.weight > 8:
+                base_cost += (package.weight - 3) * 4 + (package.weight - 8) * 6
+            elif package.weight > 3:
+                base_cost += (package.weight - 3) * 4
                 
             # Express ma wyższą opłatę za dystans
             base_cost += distance * 0.2
