@@ -46,24 +46,31 @@ Ty patrzysz na kod i myślisz: "Gdzie ja to wcisnę?"
 
 ## FAQ
 **Q: Czy mogę użyć Javy?**
+
 A: Nie.
 
 **Q: Czy mogę użyć bibliotek zewnętrznych?**
+
 A: Nie potrzebujesz. Python ma wszystko (ABC, type hints).
 
 **Q: Co z tą losowością w drone?**
+
 A: Zostaw ją. Drony nie lubią deszczu.
 
 **Q: 200 linii to dużo?**
+
 A: Widziałem metodę z 2000 linii. Miała 47 poziomów zagnieżdżenia if-ów. Programista, który to napisał, teraz hoduje alpaki (serio).
 
 **Q: Serio nie mogę użyć Javy?**
+
 A: Nie.
 
 **Q: Python jest po&#@%!!!**
+
 A: Be my guest i spróbuj JavaScript, Perla albo PHP.
 
 **Q: To może spróbuję Javy???**
+
 A: Nie.
 
 ---
