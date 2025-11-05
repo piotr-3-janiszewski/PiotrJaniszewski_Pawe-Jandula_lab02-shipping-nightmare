@@ -4,7 +4,7 @@
 Przeciętny programista spędza 73% czasu na debugowaniu if-ów w kodzie legacy? (źródło: there is no source, go to church)
 
 ## Twoje zadanie
-Otrzymałeś kod kalkulatora kosztów wysyłki w e-commerce. Poprzedni developer uciekł do Bieszczad i zostawił po sobie metodę z **ponad 200 liniami if-ów**. 
+Otrzymałeś kod kalkulatora kosztów wysyłki w e-commerce. Poprzedni developer uciekł w Bieszczady i zostawił po sobie metodę z **ponad 200 liniami if-ów**. 
 
 Twój szef krzyczy: "Musimy dodać wysyłkę balonem na ogrzane powietrze!" 
 Ty patrzysz na kod i myślisz: "Gdzie ja to wcisnę?"
