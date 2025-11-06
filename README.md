@@ -73,9 +73,9 @@ A: Be my guest i spróbuj JavaScript, Perla albo PHP (ale nie na zajęciach).
 
 A: Nie.
 
-**Q: Ale głupi ten prowadzący, każe używać Pythona a sam go nie zna?
+**Q: Ale głupi ten prowadzący, każe używać Pythona a sam go nie zna?**
 
-A: Nie mam potrzeby udawać wszystkowiedzącego. Poza tym -- pogadamy, jak przyjdziesz skomleć o wyższą ocenę.
+A: Nie mam potrzeby udawać wszystkowiedzącego. Poza tym - "nikt tu nikogo pod pistoletem nie trzyma" :)
 
 ---
 
